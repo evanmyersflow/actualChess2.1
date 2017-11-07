@@ -192,6 +192,12 @@ data class Pawn(override val isWhite: Boolean, override val coordinate: Coordina
     override fun toString(): String = if (isWhite) "Pw" else "Pb"
 }
 
+private fun turnMoves () {
+    if (isWhite) {
+
+    }
+}
+
 data class NullPiece(override val isWhite: Boolean, override val coordinate: Coordinate) : Piece {
     override val validMoves: List<Coordinate>
         get() = emptyList()
