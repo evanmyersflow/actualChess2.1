@@ -192,11 +192,6 @@ data class Pawn(override val isWhite: Boolean, override val coordinate: Coordina
     override fun toString(): String = if (isWhite) "Pw" else "Pb"
 }
 
-private fun turnMoves () {
-    if (isWhite) {
-
-    }
-}
 
 data class NullPiece(override val isWhite: Boolean, override val coordinate: Coordinate) : Piece {
     override val validMoves: List<Coordinate>
@@ -251,7 +246,7 @@ private fun getDiagonAlleyMoves(coordinate: Coordinate, size: Int = BOARD_SIZE):
     return validMoves.distinct()
 }
 
-private  fun getWhitePawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): List<Coordinate> {
+private fun getWhitePawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): List<Coordinate> {
     val validMoves = ArrayList<Coordinate>()
 
     validMoves += Coordinate(coordinate.x, coordinate.y + 1)
@@ -261,7 +256,7 @@ private  fun getWhitePawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): 
     return  validMoves
 }
 
-private  fun getBlackPawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): List<Coordinate> {
+private fun getBlackPawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): List<Coordinate> {
     val validMoves = ArrayList<Coordinate>()
 
     validMoves += Coordinate(coordinate.x, coordinate.y - 1)
@@ -269,6 +264,11 @@ private  fun getBlackPawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): 
     validMoves += Coordinate(coordinate.x + 1, coordinate.y - 1)
 
     return  validMoves
+}
+
+private fun getWhitePromotion() {
+    if (isWhite && Coordinate.y == 7)
+
 }
 
 private fun getKnightMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): List<Coordinate> {
