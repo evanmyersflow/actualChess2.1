@@ -1,3 +1,4 @@
+import java.awt.Color.white
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -253,7 +254,7 @@ private fun getWhitePawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): L
     validMoves += Coordinate(coordinate.x - 1, coordinate.y + 1)
     validMoves += Coordinate(coordinate.x + 1, coordinate.y + 1)
 
-    return  validMoves
+    return validMoves
 }
 
 private fun getBlackPawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): List<Coordinate> {
@@ -263,12 +264,12 @@ private fun getBlackPawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): L
     validMoves += Coordinate(coordinate.x - 1, coordinate.y - 1)
     validMoves += Coordinate(coordinate.x + 1, coordinate.y - 1)
 
-    return  validMoves
+    return validMoves
 }
 
 private fun getWhitePromotion() {
-    if (isWhite && Coordinate.y == 7)
-
+    if ((isWhite = true), Coordinate(coordinate.x, 7))
+    return
 }
 
 private fun getKnightMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): List<Coordinate> {
