@@ -5,6 +5,8 @@ import kotlin.collections.ArrayList
 const val DEBUG = true
 val board = HashMap<Coordinate, Piece>()
 val notation = listOf("A", "B", "C", "D", "E", "F", "G", "H")
+val pieceNotation = listOf("R", "N", "K", "B", "Q")
+val scanner = Scanner(System.`in`)
 const val SEPERATOR = ","
 const val BOARD_SIZE = 7
 val BOARD_RANGE = 0..BOARD_SIZE
@@ -16,7 +18,6 @@ fun main(args: Array<String>) {
 
     while (true) {
         printBoard(board)
-        val scanner = Scanner(System.`in`)
         val input = scanner.nextLine().toUpperCase()
 
         val (from, to) = try {
@@ -267,9 +268,18 @@ private fun getBlackPawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): L
     return validMoves
 }
 
-private fun getWhitePromotion() {
-    if ((isWhite = true), Coordinate(coordinate.x, 7))
-    return
+private fun getWhitePromotionRook(pawn: Pawn) {
+    if (pawn.isWhite && pawn.coordinate.y == 7) {
+        scanner.nextLine().equals("R")
+    }
+    return addPiece(Rook(isWhite = true, coordinate = Coordinate(x, 7)))
+}
+
+private fun getWhitePromotionQueen(pawn: Pawn) {
+    if (pawn.isWhite && pawn.coordinate.y == 7) {
+        scanner.nextLine().equals("Q")
+    }
+    return addPiece(Queen(isWhite = true, coordinate = Coordinate(x, 7)))
 }
 
 private fun getKnightMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): List<Coordinate> {
