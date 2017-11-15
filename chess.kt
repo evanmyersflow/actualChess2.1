@@ -1,8 +1,7 @@
-import java.awt.Color.white
 import java.util.*
 import kotlin.collections.ArrayList
 
-const val DEBUG = true
+const val DEBUG = false
 val board = HashMap<Coordinate, Piece>()
 val notation = listOf("A", "B", "C", "D", "E", "F", "G", "H")
 val pieceNotation = listOf("R", "N", "K", "B", "Q")
@@ -16,7 +15,7 @@ fun main(args: Array<String>) {
 
     println("Let the game begin!")
 
-    while (true) {
+    loop@ while (true) {
         printBoard(board)
         val input = scanner.nextLine().toUpperCase()
 
@@ -25,33 +24,55 @@ fun main(args: Array<String>) {
                 Coordinate.parse(it.first().trim()) to Coordinate.parse(it.last().trim())
             }
         } catch (e: IllegalStateException) {
-            println("You're dumb!")
+            println("Illegal move!")
             continue
         }
 
-        try {
-            val chosenPiece = board[from]
-            if (chosenPiece == null) {
-            } else {
-                val validMoves = chosenPiece.validMoves
+        val chosenPiece = board[from]
+        if (chosenPiece == null) {
+            println("That's not a piece!")
+        } else {
+            val validMoves = chosenPiece.validMoves
 
-                if (DEBUG) printBoard(validMoves.associate { it to PlaceholderPiece(it) })
+            if (DEBUG) printBoard(validMoves.associate { it to PlaceholderPiece(it) })
 
-                if (validMoves.contains(to)) {
-                    val oldPiece = board.remove(from)!!
-                    board[to] = when (oldPiece) {
-                        is Rook -> Rook(oldPiece.isWhite, to)
-                        is Queen -> Queen(oldPiece.isWhite, to)
-                        is Bishop -> Bishop(oldPiece.isWhite, to)
-                        is Knight -> Knight(oldPiece.isWhite, to)
-                        is King -> King(oldPiece.isWhite, to)
-                        is Pawn -> Pawn(oldPiece.isWhite, to)
-                        else -> TODO()
+            if (validMoves.contains(to)) {
+                val oldPiece = board.remove(from)!!
+                board[to] = when (oldPiece) {
+                    is Rook ->
+                        if (oldPiece.isWhite in (to)) {
+                            println("You can't take your own piece!")
+                        } else {
+                            Rook(oldPiece.isWhite, to)
+                        }
+                    is Queen -> Queen(oldPiece.isWhite, to)
+                    is Bishop -> Bishop(oldPiece.isWhite, to)
+                    is Knight -> Knight(oldPiece.isWhite, to)
+                    is King -> King(oldPiece.isWhite, to)
+                    is Pawn -> {
+                        if (oldPiece.isWhite && to.y == 7
+                                || !oldPiece.isWhite && to.y == 0) {
+                            println("Promote to a: ")
+                            val newPieceName = scanner.nextLine().toUpperCase().trim()
+                            if (pieceNotation.contains(newPieceName)) {
+                                when (newPieceName) {
+                                    "Q", "Queen" -> Queen(oldPiece.isWhite, to)
+                                    "R", "Rook" -> Rook(oldPiece.isWhite, to)
+                                    "N", "K", "Knight" -> Knight(oldPiece.isWhite, to)
+                                    "B", "Bishop" -> Bishop(oldPiece.isWhite, to)
+                                    else -> throw IllegalStateException("You're dumb!")
+                                }
+                            } else {
+                                println("You're a pedantic troglodyte")
+                                continue@loop
+                            }
+                        } else {
+                            Pawn(oldPiece.isWhite, to)
+                        }
                     }
+                    else -> throw IllegalStateException("You're dumb!")
                 }
             }
-        } catch (e: NotImplementedError) {
-            continue
         }
     }
 }
@@ -176,10 +197,10 @@ data class Pawn(override val isWhite: Boolean, override val coordinate: Coordina
     override val validMoves: List<Coordinate>
         get() {
             val validMoves = ArrayList<Coordinate>()
-            if (isWhite) {
-                validMoves += getWhitePawnMoves(coordinate)
+            validMoves += if (isWhite) {
+                getWhitePawnMoves(coordinate)
             } else {
-                validMoves += getBlackPawnMoves(coordinate)
+                getBlackPawnMoves(coordinate)
             }
             if (coordinate.y == 1 && isWhite) {
                 validMoves += Coordinate(coordinate.x, coordinate.y + 2)
@@ -266,20 +287,6 @@ private fun getBlackPawnMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): L
     validMoves += Coordinate(coordinate.x + 1, coordinate.y - 1)
 
     return validMoves
-}
-
-private fun getWhitePromotionRook(pawn: Pawn) {
-    if (pawn.isWhite && pawn.coordinate.y == 7) {
-        scanner.nextLine().equals("R")
-    }
-    return addPiece(Rook(isWhite = true, coordinate = Coordinate(x, 7)))
-}
-
-private fun getWhitePromotionQueen(pawn: Pawn) {
-    if (pawn.isWhite && pawn.coordinate.y == 7) {
-        scanner.nextLine().equals("Q")
-    }
-    return addPiece(Queen(isWhite = true, coordinate = Coordinate(x, 7)))
 }
 
 private fun getKnightMoves(coordinate: Coordinate, size: Int = BOARD_SIZE): List<Coordinate> {
