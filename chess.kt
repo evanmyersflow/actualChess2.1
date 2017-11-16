@@ -1,5 +1,7 @@
+import MoveBranch.UP
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 const val DEBUG = false
 val board = HashMap<Coordinate, Piece>()
@@ -37,14 +39,38 @@ fun main(args: Array<String>) {
             if (DEBUG) printBoard(validMoves.associate { it to PlaceholderPiece(it) })
 
             if (validMoves.contains(to)) {
+                val toPiece = board[to]
+
+                val moveBranches = HashMap<MoveBranch, List<Coordinate>>(
+                        UP = chosenPiece.validMoves.contains(Coordinate(x, y + j)),
+                        DOWN = chosenPiece.validMoves.contains(Coordinate(x, y - j)),
+                        RIGHT = chosenPiece.validMoves.contains(Coordinate(x + i, y)),
+                        LEFT = chosenPiece.validMoves.contains(Coordinate(x - i, y)),
+                        UP_RIGHT = chosenPiece.validMoves.contains(Coordinate(x + i, y + j)),
+                        UP_LEFT = chosenPiece.validMoves.contains(Coordinate(x - i, y + j)),
+                        DOWN_RIGHT = chosenPiece.validMoves.contains(Coordinate(x + i, y - j)),
+                        DOWN_LEFT = chosenPiece.validMoves.contains(Coordinate(x - i, y - j))
+                        )
+                
+                 /*
+                 1. Get all the move branches
+                 2. Put the moves in the map
+                 3. Write a method to get which branch the piece is moving along
+                 4. moveBranches[branchThePieceIsMovingOn] and use those moves to see if a piece is in the way
+                 */
+                for (move in validMoves) {
+
+                }
+
+                val isCapturing = toPiece != null
+                if (isCapturing && chosenPiece.isWhite == toPiece!!.isWhite) {
+                    println("You can't take your own piece!")
+                    continue
+                }
+
                 val oldPiece = board.remove(from)!!
                 board[to] = when (oldPiece) {
-                    is Rook ->
-                        if (oldPiece.isWhite in (to)) {
-                            println("You can't take your own piece!")
-                        } else {
-                            Rook(oldPiece.isWhite, to)
-                        }
+                    is Rook -> Rook(oldPiece.isWhite, to)
                     is Queen -> Queen(oldPiece.isWhite, to)
                     is Bishop -> Bishop(oldPiece.isWhite, to)
                     is Knight -> Knight(oldPiece.isWhite, to)
@@ -75,6 +101,12 @@ fun main(args: Array<String>) {
             }
         }
     }
+}
+
+fun <T, U> HashMap(UP: Boolean, DOWN: Boolean, RIGHT: Boolean, LEFT: Boolean, UP_RIGHT: Boolean, UP_LEFT: Boolean, DOWN_RIGHT: Boolean, DOWN_LEFT: Boolean): Any {}
+
+enum class MoveBranch {
+    UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT
 }
 
 private fun printBoard(board: Map<Coordinate, Piece>) {
