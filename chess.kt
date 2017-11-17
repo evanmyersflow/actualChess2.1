@@ -1,4 +1,3 @@
-import MoveBranch.UP
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -41,23 +40,56 @@ fun main(args: Array<String>) {
             if (validMoves.contains(to)) {
                 val toPiece = board[to]
 
-                val moveBranches = HashMap<MoveBranch, List<Coordinate>>(
-                        UP = chosenPiece.validMoves.contains(Coordinate(x, y + j)),
-                        DOWN = chosenPiece.validMoves.contains(Coordinate(x, y - j)),
-                        RIGHT = chosenPiece.validMoves.contains(Coordinate(x + i, y)),
-                        LEFT = chosenPiece.validMoves.contains(Coordinate(x - i, y)),
-                        UP_RIGHT = chosenPiece.validMoves.contains(Coordinate(x + i, y + j)),
-                        UP_LEFT = chosenPiece.validMoves.contains(Coordinate(x - i, y + j)),
-                        DOWN_RIGHT = chosenPiece.validMoves.contains(Coordinate(x + i, y - j)),
-                        DOWN_LEFT = chosenPiece.validMoves.contains(Coordinate(x - i, y - j))
-                        )
-                
-                 /*
-                 1. Get all the move branches
-                 2. Put the moves in the map
-                 3. Write a method to get which branch the piece is moving along
-                 4. moveBranches[branchThePieceIsMovingOn] and use those moves to see if a piece is in the way
-                 */
+                val moveBranches = HashMap<MoveBranch, List<Coordinate>>()
+
+                for (branch in MoveBranch.values()) {
+                    moveBranches.put(branch, when (branch) {
+                        MoveBranch.UP -> {
+                            validMoves.filter {
+                                chosenPiece.coordinate.x == it.x && chosenPiece.coordinate.y < it.y
+                            }
+                        }
+                        MoveBranch.DOWN -> {
+                            validMoves.filter {
+                                chosenPiece.coordinate.x == it.x && chosenPiece.coordinate.y > it.y
+                            }
+                        }
+                        MoveBranch.LEFT -> {
+                            validMoves.filter {
+                                chosenPiece.coordinate.x > it.x && chosenPiece.coordinate.y == it.y
+                            }
+                        }
+                        MoveBranch.RIGHT -> {
+                            validMoves.filter {
+                                chosenPiece.coordinate.x < it.x && chosenPiece.coordinate.y == it.y
+                            }
+                        }
+                        MoveBranch.UP_LEFT ->
+                            validMoves.filter {
+                                chosenPiece.coordinate.x > it.x && chosenPiece.coordinate.y < it.y
+                            }
+                        MoveBranch.UP_RIGHT ->
+                            validMoves.filter {
+                                chosenPiece.coordinate.x < it.x && chosenPiece.coordinate.y < it.y
+                            }
+                        MoveBranch.DOWN_LEFT -> {
+                            validMoves.filter {
+                                chosenPiece.coordinate.x > it.x && chosenPiece.coordinate.y > it.y
+                            }
+                        }
+                        MoveBranch.DOWN_RIGHT ->
+                            validMoves.filter {
+                                chosenPiece.coordinate.x > it.x && chosenPiece.coordinate.y < it.y
+                            }
+                    })
+                }
+
+                /*
+                1. Get all the move branches
+                2. Put the moves in the map
+                3. Write a method to get which branch the piece is moving along
+                4. moveBranches[branchThePieceIsMovingOn] and use those moves to see if a piece is in the way
+                */
                 for (move in validMoves) {
 
                 }
@@ -86,17 +118,17 @@ fun main(args: Array<String>) {
                                     "R", "Rook" -> Rook(oldPiece.isWhite, to)
                                     "N", "K", "Knight" -> Knight(oldPiece.isWhite, to)
                                     "B", "Bishop" -> Bishop(oldPiece.isWhite, to)
-                                    else -> throw IllegalStateException("You're dumb!")
+                                    else -> throw IllegalStateException("That's not a piece!")
                                 }
                             } else {
-                                println("You're a pedantic troglodyte")
+                                println("You can't promote!")
                                 continue@loop
                             }
                         } else {
                             Pawn(oldPiece.isWhite, to)
                         }
                     }
-                    else -> throw IllegalStateException("You're dumb!")
+                    else -> throw IllegalStateException("Illegal move!")
                 }
             }
         }
@@ -352,4 +384,3 @@ fun <T> letOnSquare(coordinate: Coordinate, block: (Boolean) -> T): T {
         }
     }
 }
-
