@@ -64,25 +64,45 @@ fun main(args: Array<String>) {
                                 chosenPiece.coordinate.x < it.x && chosenPiece.coordinate.y == it.y
                             }
                         }
-                        MoveBranch.UP_LEFT ->
+                        MoveBranch.UP_LEFT -> {
                             validMoves.filter {
                                 chosenPiece.coordinate.x > it.x && chosenPiece.coordinate.y < it.y
                             }
-                        MoveBranch.UP_RIGHT ->
+                        }
+                        MoveBranch.UP_RIGHT -> {
                             validMoves.filter {
                                 chosenPiece.coordinate.x < it.x && chosenPiece.coordinate.y < it.y
                             }
+                        }
                         MoveBranch.DOWN_LEFT -> {
                             validMoves.filter {
                                 chosenPiece.coordinate.x > it.x && chosenPiece.coordinate.y > it.y
                             }
                         }
-                        MoveBranch.DOWN_RIGHT ->
+                        MoveBranch.DOWN_RIGHT -> {
                             validMoves.filter {
                                 chosenPiece.coordinate.x > it.x && chosenPiece.coordinate.y < it.y
                             }
+                        }
                     })
                 }
+
+                val branch = when {
+                    chosenPiece.coordinate.x == to.x && chosenPiece.coordinate.y < to.y -> MoveBranch.UP
+                    chosenPiece.coordinate.x == to.x && chosenPiece.coordinate.y > to.y -> MoveBranch.DOWN
+                    chosenPiece.coordinate.x > to.x && chosenPiece.coordinate.y == to.y -> MoveBranch.LEFT
+                    chosenPiece.coordinate.x < to.x && chosenPiece.coordinate.y == to.y -> MoveBranch.RIGHT
+                    chosenPiece.coordinate.x > to.x && chosenPiece.coordinate.y < to.y -> MoveBranch.UP_LEFT
+                    chosenPiece.coordinate.x < to.x && chosenPiece.coordinate.y < to.y -> MoveBranch.UP_RIGHT
+                    chosenPiece.coordinate.x > to.x && chosenPiece.coordinate.y > to.y -> MoveBranch.DOWN_LEFT
+                    chosenPiece.coordinate.x > to.x && chosenPiece.coordinate.y < to.y -> MoveBranch.DOWN_RIGHT
+                    else -> throw IllegalStateException(
+                            "Illegal Move!"
+                    )
+                }
+
+                moveBranches[branch]!!.filter { board[it] != null}
+
 
                 /*
                 1. Get all the move branches
@@ -134,8 +154,6 @@ fun main(args: Array<String>) {
         }
     }
 }
-
-fun <T, U> HashMap(UP: Boolean, DOWN: Boolean, RIGHT: Boolean, LEFT: Boolean, UP_RIGHT: Boolean, UP_LEFT: Boolean, DOWN_RIGHT: Boolean, DOWN_LEFT: Boolean): Any {}
 
 enum class MoveBranch {
     UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT
