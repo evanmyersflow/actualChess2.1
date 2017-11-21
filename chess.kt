@@ -99,10 +99,45 @@ fun main(args: Array<String>) {
                     else -> throw IllegalStateException(
                             "Illegal Move!"
                     )
+                   // continue@loop
                 }
 
-                moveBranches[branch]!!.filter { board[it] != null}
 
+                val arePiecesInTheWay = moveBranches[branch]!!.filter {
+                    board[it] != null
+                }.any {
+                    when (branch) {
+                        MoveBranch.UP -> {
+                            to.y > it.y
+                        }
+                        MoveBranch.DOWN -> {
+                            to.y < it.y
+                        }
+                        MoveBranch.LEFT -> {
+                            to.x < it.y
+                        }
+                        MoveBranch.RIGHT -> {
+                            to.x > it.y
+                        }
+                        MoveBranch.UP_LEFT -> {
+                            to.y > it.y && to.x < it.y
+                        }
+                        MoveBranch.UP_RIGHT -> {
+                            to.y > it.y && to.x > it.y
+                        }
+                        MoveBranch.DOWN_LEFT -> {
+                            to.y < it.y && to.x < it.y
+                        }
+                        MoveBranch.DOWN_RIGHT -> {
+                            to.y < it.y && to.x > it.y
+                        }
+                    }
+                }
+
+                if (arePiecesInTheWay) {
+                    println("You can't jump pieces!")
+                    continue@loop
+                }
 
                 /*
                 1. Get all the move branches
