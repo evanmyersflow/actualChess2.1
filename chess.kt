@@ -94,14 +94,10 @@ fun main(args: Array<String>) {
                     chosenPiece.coordinate.x < to.x && chosenPiece.coordinate.y == to.y -> MoveBranch.RIGHT
                     chosenPiece.coordinate.x > to.x && chosenPiece.coordinate.y < to.y -> MoveBranch.UP_LEFT
                     chosenPiece.coordinate.x < to.x && chosenPiece.coordinate.y < to.y -> MoveBranch.UP_RIGHT
-                    chosenPiece.coordinate.x > to.x && chosenPiece.coordinate.y > to.y -> MoveBranch.DOWN_LEFT
-                    chosenPiece.coordinate.x > to.x && chosenPiece.coordinate.y < to.y -> MoveBranch.DOWN_RIGHT
-                    else -> throw IllegalStateException(
-                            "Illegal Move!"
-                    )
-                   // continue@loop
+                    chosenPiece.coordinate.x < to.x && chosenPiece.coordinate.y > to.y -> MoveBranch.DOWN_LEFT
+                    chosenPiece.coordinate.x > to.x && chosenPiece.coordinate.y > to.y -> MoveBranch.DOWN_RIGHT
+                    else -> throw IllegalStateException("Illegal Move!")
                 }
-
 
                 val arePiecesInTheWay = moveBranches[branch]!!.filter {
                     board[it] != null
