@@ -135,12 +135,6 @@ fun main(args: Array<String>) {
                     continue@loop
                 }
 
-                /*
-                1. Get all the move branches
-                2. Put the moves in the map
-                3. Write a method to get which branch the piece is moving along
-                4. moveBranches[branchThePieceIsMovingOn] and use those moves to see if a piece is in the way
-                */
                 for (move in validMoves) {
 
                 }
